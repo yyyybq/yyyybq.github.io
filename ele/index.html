@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Embodied Last Exam (ELE): an interactive household scene where world time keeps running, actions have physical consequences, and robots execute long-horizon tasks end to end."
+    />
+    <meta name="theme-color" content="#f6f2e9" />
+    <meta property="og:title" content="Embodied Last Exam (ELE)" />
+    <meta property="og:description" content="Towards a Next Generation Inverted Benchmark" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/scene-poster.webp" />
+    <title>ELE · Embodied Last Exam</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="data.js" defer></script>
+    <script src="assets/media-meta.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <defs>
+        <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" /></symbol>
+        <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6" /></symbol>
+        <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8 12 3 3 8v8l9 5 9-5z" /><path d="m3 8 9 5 9-5M12 13v8" /></symbol>
+        <symbol id="i-quote" viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1zM15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" /></symbol>
+        <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></symbol>
+        <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></symbol>
+        <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+        <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z" /></symbol>
+        <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6" /></symbol>
+        <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol>
+        <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" /></symbol>
+        <symbol id="i-expand" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></symbol>
+        <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /></symbol>
+        <symbol id="i-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6" /></symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></symbol>
+        <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" /></symbol>
+        <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z" /></symbol>
+        <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" /></symbol>
+      </defs>
+    </svg>
+
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="nav-inner">
+        <a class="brand" href="#top"><img src="assets/favicon.svg" alt="" width="28" height="28" /><span>ELE</span></a>
+        <button class="icon-button mobile-menu" id="menu-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav">
+          <svg class="ico"><use href="#i-menu" /></svg>
+        </button>
+        <nav id="site-nav" aria-label="Main navigation">
+          <a href="#scene">Scene</a><a href="#design">Design</a><a href="#consequences">Consequences</a><a href="#rollouts">Rollouts</a><a href="#stages">Stages</a><a href="#gallery">Gallery</a><a href="#citation">Citation</a>
+        </nav>
+      </div>
+      <div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div>
+    </header>
+
+    <main id="main">
+      <header class="masthead wrap" id="top">
+        <p class="lab-line">ELE · Embodied Last Exam</p>
+        <h1 class="project-title">Embodied Last Exam</h1>
+        <p class="paper-title">Towards a Next Generation Inverted Benchmark</p>
+        <ul class="authors" id="authors" aria-label="Authors" hidden></ul>
+        <p class="affiliations" id="affiliations" hidden></p>
+        <div class="resources" id="resources">
+          <a class="button primary" data-link="report" href="#"><svg class="ico"><use href="#i-file" /></svg>Report</a>
+          <a class="button" data-link="code" href="#"><svg class="ico"><use href="#i-code" /></svg>Code</a>
+          <a class="button" data-link="scene" href="#" target="_blank" rel="noopener"><svg class="ico"><use href="#i-box" /></svg>Interactive scene</a>
+          <a class="button" href="#citation"><svg class="ico"><use href="#i-quote" /></svg>BibTeX</a>
+        </div>
+      </header>
+
+      <!-- Interactive scene, directly under the title -->
+      <section class="scene-section" id="scene" aria-labelledby="scene-title">
+        <div class="wrap">
+          <div class="scene-shell" id="scene-shell">
+            <div class="scene-toolbar">
+              <div class="scene-identity">
+                <span class="status-dot" aria-hidden="true"></span>
+                <strong id="scene-title">Home1</strong>
+                <span class="scene-kind">Interactive 3D scene</span>
+              </div>
+              <div class="scene-actions">
+                <button class="tool-button" id="scene-fullscreen" type="button" hidden><svg class="ico"><use href="#i-expand" /></svg><span>Fullscreen</span></button>
+                <a class="tool-button" id="scene-open" href="#" target="_blank" rel="noopener"><svg class="ico"><use href="#i-external" /></svg><span>Open in new tab</span></a>
+              </div>
+            </div>
+            <div class="scene-stage" id="scene-stage" data-state="poster">
+              <div class="scene-canvas" id="scene-canvas">
+                <img class="scene-poster" src="assets/scene-poster.webp" alt="Cutaway view of Home1, a furnished apartment with kitchen, living room, study, bathroom and balcony; a mobile robot stands in the kitchen." width="1200" height="750" fetchpriority="high" />
+                <div class="hotspots" id="hotspots"></div>
+              </div>
+              <div class="scene-cta">
+                <p class="eyebrow">Explore it yourself</p>
+                <h2>Walk through Home1</h2>
+                <p class="scene-cta-text">Open doors and drawers, switch the lights, and meet the robot. Every object you see is interactive.</p>
+                <div class="scene-cta-row">
+                  <button class="button primary" id="scene-launch" type="button"><svg class="ico"><use href="#i-play" /></svg>Launch scene</button>
+                  <div class="invite" id="invite" hidden>
+                    <span>Invite code</span>
+                    <code id="invite-code"></code>
+                    <button class="icon-button" id="invite-copy" type="button" aria-label="Copy invite code" title="Copy invite code"><svg class="ico"><use href="#i-copy" /></svg></button>
+                  </div>
+                </div>
+                <p class="invite-note" id="invite-note" hidden>The scene is in private preview. Access requires an invite code.</p>
+              </div>
+            </div>
+            <p class="scene-hint">Drag to orbit · Scroll to zoom · Click highlighted objects · Tap a room pin to jump to its demos</p>
+          </div>
+          <ul class="stat-strip" id="stat-strip" aria-label="What's on this page"></ul>
+        </div>
+      </section>
+
+      <section class="section pale" id="design">
+        <div class="wrap">
+          <div class="section-title">
+            <p class="eyebrow">01 / Design</p>
+            <h2>A home where time, state, and action all matter</h2>
+            <p>
+              ELE places an embodied agent in a fully furnished, fully interactive apartment. The world keeps
+              running while the agent thinks, objects carry physical state that evolves on its own, and every task
+              is a long-horizon household job executed end to end.
+            </p>
+          </div>
+          <div class="design-grid">
+            <article class="design-card" style="--c: var(--sage)">
+              <span class="design-num">A</span>
+              <svg class="ico design-ico"><use href="#i-home" /></svg>
+              <h3>One interactive home</h3>
+              <p>Home1 is a complete apartment: kitchen, living room, study, bathroom and balcony. Doors, drawers, appliances, lights, curtains and furniture are articulated and operable.</p>
+              <a href="#gallery">See close-up interactions →</a>
+            </article>
+            <article class="design-card" style="--c: var(--gold)">
+              <span class="design-num">B</span>
+              <svg class="ico design-ico"><use href="#i-clock" /></svg>
+              <h3>World time never pauses</h3>
+              <p>Reasoning is not free. A world clock keeps advancing while the model plans, so slow deliberation costs real in-scene time. A single tidy-up can take hours of wall-clock time.</p>
+              <a href="#rollouts">Watch rollouts with reasoning →</a>
+            </article>
+            <article class="design-card" style="--c: var(--rust)">
+              <span class="design-num">C</span>
+              <svg class="ico design-ico"><use href="#i-flame" /></svg>
+              <h3>Actions have consequences</h3>
+              <p>States evolve whether or not the agent attends to them. Leave the stove on too long and the egg burns; forget the tap and the sink overflows.</p>
+              <a href="#consequences">See temporal consequences →</a>
+            </article>
+            <article class="design-card" style="--c: var(--lilac)">
+              <span class="design-num">D</span>
+              <svg class="ico design-ico"><use href="#i-route" /></svg>
+              <h3>Long-horizon, decomposable tasks</h3>
+              <p>Household jobs such as making coffee, putting away groceries, or cooking breakfast chain many sub-steps, each with a checkable intermediate state.</p>
+              <a href="#stages">Browse stage breakdowns →</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="consequences">
+        <div class="wrap">
+          <div class="section-title">
+            <p class="eyebrow">02 / Temporal Consequences</p>
+            <h2>The world does not wait for the agent</h2>
+            <p>
+              Physical processes keep running in the background. Acting late is a failure with a visible outcome,
+              not just a lower score.
+            </p>
+          </div>
+          <div class="consequence-grid">
+            <figure class="media-card">
+              <div class="media-frame">
+                <video class="autoplay" data-src="assets/video/consequence-egg-burn.mp4" poster="assets/poster/consequence-egg-burn.webp" muted loop playsinline controls preload="none"></video>
+              </div>
+              <figcaption><strong>Egg on the stove</strong><span>The burner is turned off too late and the fried egg burns.</span></figcaption>
+            </figure>
+            <figure class="media-card">
+              <div class="media-frame">
+                <video class="autoplay" data-src="assets/video/consequence-sink-overflow.mp4" poster="assets/poster/consequence-sink-overflow.webp" muted loop playsinline controls preload="none"></video>
+              </div>
+              <figcaption><strong>Running tap</strong><span>Water keeps flowing until the sink overflows onto the counter.</span></figcaption>
+            </figure>
+          </div>
+          <figure class="compare" id="compare">
+            <div class="compare-stage" id="compare-stage" style="--pos: 50%">
+              <img src="assets/poster/sink-overflow.webp" alt="Sink after overflowing" width="1600" height="900" loading="lazy" />
+              <div class="compare-before"><img src="assets/poster/sink-before.webp" alt="Sink before the tap is left running" width="1600" height="900" loading="lazy" /></div>
+              <span class="compare-tag left">Before</span><span class="compare-tag right">After</span>
+              <div class="compare-handle" aria-hidden="true"><span></span></div>
+              <input type="range" min="0" max="100" value="50" id="compare-range" aria-label="Drag to compare before and after" />
+            </div>
+            <figcaption>Drag to compare the same sink before and after the tap is left running.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section pale" id="rollouts">
+        <div class="wrap">
+          <div class="section-title">
+            <p class="eyebrow">03 / Robot Rollouts</p>
+            <h2>Long-horizon episodes, reasoning time included</h2>
+            <p>
+              Complete episodes recorded in Home1. Action segments play at 4×; reasoning segments are compressed harder
+              (40× or 100×) so a multi-hour episode fits in minutes. The real-time length is shown for reference.
+            </p>
+          </div>
+          <div class="rollout-tabs" id="rollout-tabs" role="tablist" aria-label="Rollout task"></div>
+          <div class="rollout-panel" id="rollout-panel" role="tabpanel">
+            <div class="rollout-player media-frame">
+              <video id="rollout-video" controls muted playsinline preload="metadata"></video>
+            </div>
+            <aside class="rollout-info">
+              <p class="eyebrow" id="rollout-room"></p>
+              <h3 id="rollout-title"></h3>
+              <p id="rollout-summary"></p>
+              <dl class="rollout-stats" id="rollout-stats"></dl>
+              <p class="tool-label">View</p>
+              <div class="chip-row" id="rollout-views" role="group" aria-label="Rollout view"></div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="stages">
+        <div class="wrap">
+          <div class="section-title">
+            <p class="eyebrow">04 / Stage Breakdown</p>
+            <h2>Every task is a chain of checkable steps</h2>
+            <p>
+              Multi-stage tasks broken into their sub-steps. Pick a step to replay it, or play the chain in order. All
+              clips at 4×.
+            </p>
+          </div>
+          <div class="stage-tabs chip-row" id="stage-tabs" role="tablist" aria-label="Multi-stage task"></div>
+          <div class="stage-body">
+            <ol class="stage-steps" id="stage-steps"></ol>
+            <div class="stage-player">
+              <div class="media-frame"><video id="stage-video" muted playsinline controls preload="metadata"></video></div>
+              <div class="stage-bar">
+                <span id="stage-caption"></span>
+                <button class="tool-button" id="stage-chain" type="button"><svg class="ico"><use href="#i-play" /></svg><span>Play all steps</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section pale" id="gallery">
+        <div class="wrap">
+          <div class="section-title">
+            <p class="eyebrow">05 / Interaction Gallery</p>
+            <h2>Close-up physical interactions</h2>
+            <p>Fine-grained interactions with articulated objects and appliances across the home. Hover to preview, click to open.</p>
+          </div>
+          <div class="chip-row filter-row" id="gallery-filters" role="group" aria-label="Filter gallery"></div>
+          <div class="gallery-grid" id="gallery-grid"></div>
+        </div>
+      </section>
+
+      <section class="section" id="citation">
+        <div class="wrap citation-wrap">
+          <div class="section-title">
+            <p class="eyebrow">Citation</p>
+            <h2>Embodied Last Exam</h2>
+          </div>
+          <div class="bibtex">
+            <button class="tool-button copy-bib" id="bib-copy" type="button"><svg class="ico"><use href="#i-copy" /></svg><span>Copy</span></button>
+            <pre><code id="bibtex"></code></pre>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <div><strong>ELE</strong> · Embodied Last Exam</div>
+        <a class="icon-button" href="#top" aria-label="Back to top" title="Back to top"><svg class="ico"><use href="#i-up" /></svg></a>
+      </div>
+    </footer>
+
+    <dialog class="lightbox" id="lightbox" aria-label="Video viewer">
+      <div class="lightbox-inner">
+        <div class="lightbox-head">
+          <span id="lightbox-count"></span>
+          <strong id="lightbox-title"></strong>
+          <button class="icon-button" id="lightbox-close" type="button" aria-label="Close"><svg class="ico"><use href="#i-x" /></svg></button>
+        </div>
+        <div class="lightbox-body">
+          <button class="icon-button lightbox-nav" id="lightbox-prev" type="button" aria-label="Previous video"><svg class="ico"><use href="#i-left" /></svg></button>
+          <video id="lightbox-video" controls autoplay muted loop playsinline></video>
+          <button class="icon-button lightbox-nav" id="lightbox-next" type="button" aria-label="Next video"><svg class="ico"><use href="#i-right" /></svg></button>
+        </div>
+      </div>
+    </dialog>
+  </body>
+</html>
