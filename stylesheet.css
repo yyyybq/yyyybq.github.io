@@ -28,6 +28,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
@@ -877,6 +881,86 @@ button:focus-visible {
   border-bottom: 1px solid var(--line);
 }
 
+.section-heading--work {
+  margin-bottom: 30px;
+}
+
+.work-toolbar {
+  margin-bottom: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.work-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.56);
+  border: 1px solid rgba(23, 26, 29, 0.12);
+  border-radius: 999px;
+  box-shadow: 0 10px 28px rgba(27, 31, 42, 0.06);
+}
+
+.work-filter button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.work-filter button:hover {
+  color: var(--ink);
+}
+
+.work-filter button[aria-pressed="true"] {
+  color: var(--white);
+  background: var(--ink);
+  box-shadow: 0 8px 20px rgba(23, 26, 29, 0.18);
+}
+
+.work-filter button span {
+  min-width: 22px;
+  padding: 2px 6px;
+  color: inherit;
+  background: rgba(128, 128, 128, 0.14);
+  border-radius: 999px;
+  font-size: 10px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.work-filter button[aria-pressed="true"] span {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.work-filter-status {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.work-groups {
+  display: grid;
+  gap: 24px;
+}
+
+.work-groups .publication-grid {
+  margin-top: 0;
+}
+
 .publication-stack {
   display: grid;
   gap: 24px;
@@ -958,6 +1042,10 @@ button:focus-visible {
   background: #f5ead1;
 }
 
+.publication-media--state {
+  background: #f0ece5;
+}
+
 .media-award {
   position: absolute;
   top: 20px;
@@ -970,6 +1058,21 @@ button:focus-visible {
   font-size: 11px;
   font-weight: 850;
   letter-spacing: 0.04em;
+}
+
+.media-new {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 8px 12px;
+  color: var(--white);
+  background: var(--coral);
+  border-radius: 999px;
+  box-shadow: 0 8px 22px rgba(80, 30, 12, 0.18);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .publication-copy {
@@ -1012,6 +1115,10 @@ button:focus-visible {
 .venue-badge--neutral {
   color: var(--ink);
   background: #deded8;
+}
+
+.venue-badge--green {
+  background: #28785f;
 }
 
 .publication-copy h3 {
@@ -1110,6 +1217,21 @@ button:focus-visible {
   padding-top: 22px;
 }
 
+@media (min-width: 861px) {
+  .publication-grid[data-visible-count="1"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .publication-grid[data-visible-count="1"] .publication-card--compact {
+    grid-template-columns: minmax(320px, 0.82fr) minmax(0, 1.18fr);
+    grid-template-rows: none;
+  }
+
+  .publication-grid[data-visible-count="1"] .publication-media--compact {
+    min-height: 320px;
+  }
+}
+
 .timeline-layout {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1178,6 +1300,17 @@ button:focus-visible {
   margin: 0 0 5px;
   font-size: 22px;
   letter-spacing: -0.025em;
+}
+
+.timeline-item h4 a {
+  text-decoration-color: transparent;
+  text-underline-offset: 0.16em;
+  transition: color 180ms ease, text-decoration-color 180ms ease;
+}
+
+.timeline-item h4 a:hover {
+  color: var(--blue);
+  text-decoration-color: currentColor;
 }
 
 .timeline-item p {
@@ -1574,6 +1707,22 @@ button:focus-visible {
     margin-bottom: 38px;
   }
 
+  .work-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .work-filter {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .work-filter button {
+    justify-content: center;
+    padding-inline: 10px;
+  }
+
   .section-heading h2,
   .section-heading--wide h2 {
     font-size: clamp(42px, 13vw, 62px);
@@ -1628,7 +1777,8 @@ button:focus-visible {
     grid-template-rows: 210px 1fr;
   }
 
-  .media-award {
+  .media-award,
+  .media-new {
     top: 12px;
     left: 12px;
     font-size: 9px;

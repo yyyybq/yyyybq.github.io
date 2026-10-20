@@ -63,5 +63,40 @@ if ("IntersectionObserver" in window) {
   observedSections.forEach((section) => sectionObserver.observe(section));
 }
 
+const workFilterButtons = [...document.querySelectorAll("[data-work-filter]")];
+const workCards = [...document.querySelectorAll("[data-work-card]")];
+const workGroups = [...document.querySelectorAll("[data-work-group]")];
+const workFilterStatus = document.querySelector("[data-work-filter-status]");
+
+const applyWorkFilter = (filter) => {
+  workCards.forEach((card) => {
+    card.hidden = filter === "selected" && card.dataset.selected !== "true";
+  });
+
+  workGroups.forEach((group) => {
+    const visibleCount = [...group.querySelectorAll("[data-work-card]")].filter((card) => !card.hidden).length;
+    group.dataset.visibleCount = String(visibleCount);
+    group.hidden = visibleCount === 0;
+  });
+
+  workFilterButtons.forEach((button) => {
+    const isActive = button.dataset.workFilter === filter;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+
+  if (workFilterStatus) {
+    const visibleCount = workCards.filter((card) => !card.hidden).length;
+    workFilterStatus.textContent =
+      filter === "selected" ? `Showing ${visibleCount} selected works` : `Showing all ${visibleCount} works`;
+  }
+};
+
+workFilterButtons.forEach((button) => {
+  button.addEventListener("click", () => applyWorkFilter(button.dataset.workFilter));
+});
+
+if (workFilterButtons.length && workCards.length) applyWorkFilter("selected");
+
 const year = document.querySelector("[data-year]");
 if (year) year.textContent = String(new Date().getFullYear());
