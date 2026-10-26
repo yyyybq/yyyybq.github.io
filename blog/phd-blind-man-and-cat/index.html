@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>博士、瞎子和猫</title>
+<meta property="og:title" content="博士、瞎子和猫">
+<meta property="og:image" content="https://yyyybq.github.io/blog/phd-blind-man-and-cat/images/fig1_hero.jpg">
+<style>
+:root{--ink:#1f2937;--muted:#6b7280;--paper:#fffdf9;--rule:#e5e0d6;--accent:#e07a5f;--tint:#f6f1e7;
+--green:#e5f4e4;--orange:#f9ece7;--red:#fbebeb;--yellow:#f9eeda;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--ink:#e8e6e1;--muted:#a1a1aa;--paper:#17171a;--rule:#33333a;--tint:#232327;
+--green:#1f3a22;--orange:#3d2a1f;--red:#3d2222;--yellow:#3b331a}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Noto Serif","Noto Serif SC","Source Han Serif SC","Songti SC",serif;
+font-size:18px;line-height:1.85;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+main{max-width:720px;margin:0 auto;padding:48px 20px 80px}
+h1{font-size:2.1em;line-height:1.25;margin:0 0 .3em;letter-spacing:-.01em}
+h2{font-size:1.35em;margin:2.2em 0 .6em;line-height:1.35}
+p{margin:0 0 1.1em}
+.byline{color:var(--muted);font-size:.95em;margin-bottom:2em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.byline a{color:var(--muted)}
+a{color:inherit;text-decoration-color:var(--accent);text-underline-offset:3px}
+blockquote{margin:1.6em 0;padding:16px 20px;background:var(--tint);border-left:4px solid var(--accent);border-radius:6px}
+blockquote p{margin:0}
+figure{margin:1.8em -8px}
+figure img{width:100%;height:auto;display:block;border-radius:8px}
+figcaption{color:var(--muted);font-size:.85em;text-align:center;margin-top:10px;font-style:italic}
+table{border-collapse:collapse;width:100%;margin:1.4em 0;font-size:.92em;display:block;overflow-x:auto}
+th,td{border:1px solid var(--rule);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:var(--tint)}
+td.v-good{background:var(--green)} td.v-warn{background:var(--orange)} td.v-miss{background:var(--red)} td.v-seed{background:var(--yellow)}
+pre{background:var(--tint);padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:.85em;line-height:1.5}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+ol,ul{padding-left:1.4em} li{margin-bottom:.5em}
+hr{border:0;border-top:1px solid var(--rule);margin:2.5em 0}
+strong{font-weight:700}
+p,li,td{overflow-wrap:anywhere}
+.home-link{font-size:.85em;color:var(--muted);margin-bottom:1.5em}
+</style>
+<meta name="description" content="GPT-6 缺的不是更好的表征，而是逼出表征的压力：一个不等它、也不原谅它的世界。">
+<meta name="author" content="Baiqiao Yin">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://yyyybq.github.io/blog/phd-blind-man-and-cat/">
+<meta property="og:description" content="GPT-6 缺的不是更好的表征，而是逼出表征的压力：一个不等它、也不原谅它的世界。">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://yyyybq.github.io/blog/phd-blind-man-and-cat/">
+<link rel="alternate" hreflang="zh" href="https://yyyybq.github.io/blog/phd-blind-man-and-cat/">
+<link rel="alternate" hreflang="en" href="https://yyyybq.github.io/blog/phd-blind-man-and-cat/en.html">
+</head>
+<body><main>
+<nav class="home-link" aria-label="博客导航"><a href="../../#blog">← Baiqiao Yin · 博客</a></nav>
+<h1>博士、瞎子和猫</h1>
+<p class="byline"><span>2026 年 10 月 · Baiqiao Yin · 阅读约 10 分钟</span><a href="en.html">English</a></p>
+<p>GPT-6 正在操控一台双臂机器人插花。握着花的那只手臂，腕部相机看不见瓶口；于是它把空着的另一只手臂挪过去，让那只手臂的相机对准瓶口，再把花插进去。没有人教过它这一招。遥操作的示范里几乎没有这种动作：人类示范者用自己的眼睛看场景，很少会为了看清楚去挪一台相机。</p>
+<p>同一个模型，在一个不会暂停的厨房里，把牛奶放进冰箱，转身去搬水果，冰箱门在身后敞了好几分钟。锅里的蛋熟了，它开始不紧不慢地考虑要不要关火；等火真正关掉，蛋已经焦了。</p>
+<p>两件事都是真的，而且出于同一个原因。它会的，书里都有；它不会的，书里都没有，只有身体碰过才知道。而它长大的那个世界，从来没有要求它碰过任何东西。</p>
+<p>这篇文章想说的就是这一件事。好的表征需要手工设计吗？物理理解只能来自视觉吗？GPT-6 已经把这两个问题变成了过去式，答案都是不需要。值得问的问题在后面：一个智能体会长出什么能力，取决于它的世界要求它什么。那么，什么样的世界，会逼它长出现在缺的那一部分？</p>
+<blockquote>
+<p><strong>不要设计表征，去设计压力。</strong></p>
+</blockquote>
+<figure><img alt="图 1 · 瞎子、猫、博士各有所缺" src="images/fig1_hero.jpg" loading="lazy"><figcaption>图 1 · 瞎子、猫、博士各有所缺</figcaption></figure>
+<p>瞎子没有视觉，猫没有语言，但它们都有完整的物理智能。博士读过所有的书、看过所有的视频，缺的是身体，以及一个会推回来的世界。</p>
+<h2>一、读过所有书的博士</h2>
+<p>先说它能做到的。一个没有身体、也没有为物理专门设计过表征的通用模型，只要允许它从示范里做上下文学习、给它足够多的尝试机会，就能把一批常用的具身 benchmark 推到接近饱和，还能零样本驱动从单臂、双臂、灵巧手到人形的多种真机。它会从失败中恢复，会用深度和触觉修正动作，会把示范改编到眼前的场景，而不是照搬。</p>
+<figure><img alt="图 2 · 空着的手臂把相机挪到瓶口，示范里没有这个动作" src="images/fig2_active_vision.jpg" loading="lazy"><figcaption>图 2 · 空着的手臂把相机挪到瓶口，示范里没有这个动作</figcaption></figure>
+<p>这就是为什么那两个问题已经是过去式。好的表征不需要手工设计：它的内部表征从没有为物理设计过，只是规模和通用目标的副产品。物理理解也不只能来自视觉：先天盲人靠触觉、听觉和运动就能建立空间结构，甚至能推断出从没走过的捷径。真正不可或缺的不是某种模态，而是一种信息结构：连续时间里的状态变化，视点与自身运动，遮挡与持续存在，行动及其后果。这种结构大量地、二手地存在于互联网视频里，存在于人类描述物理世界的海量文字里。博士从书里学会了大半个世界。</p>
+<p>但只是大半个。</p>
+<h2>二、它缺的四样东西</h2>
+<p>把基础物理智能分成五组：对象性、直觉物理、身体相关的可供性、感知—行动因果性、主动感知；再补上两条：对整个世界的持续状态，以及时间（这七条的出处见文末的注）。拿它们去对照 GPT-6 在厨房和真机上的表现，结果整齐得出奇：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>诊断</th>
+<th>典型表现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>对象性</td>
+<td class="v-good">基本有</td>
+<td>持续存在、身份保持、遮挡关系都能处理</td>
+</tr>
+<tr>
+<td>直觉物理</td>
+<td class="v-warn">语义有，决策无</td>
+<td>知道蛋会糊，火却关晚了</td>
+</tr>
+<tr>
+<td>身体相关的可供性</td>
+<td class="v-miss">缺</td>
+<td>冰箱门横在自己的手臂前；肘部扫倒桌上的东西</td>
+</tr>
+<tr>
+<td>感知—行动因果性</td>
+<td class="v-miss">缺</td>
+<td>水龙头推了又推；把画面里的重叠当成挂上了</td>
+</tr>
+<tr>
+<td>主动感知与探索</td>
+<td class="v-seed">萌芽</td>
+<td>被挡住时才挪相机</td>
+</tr>
+<tr>
+<td>整个世界的持续状态</td>
+<td class="v-miss">缺</td>
+<td>冰箱门一直开着</td>
+</tr>
+<tr>
+<td>时间</td>
+<td class="v-miss">缺</td>
+<td>像在会暂停的世界里推理</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>一句话诊断</strong>：它有的，都能从书和视频里二手学到：东西被挡住了还在，蛋会糊，水洒了收不回来。它缺的四样，都只能第一手获得。</p>
+</blockquote>
+<p><strong>它不为自己的身体做计划</strong>。去冰箱取东西，它一只手拉着门，基座停的位置恰好让门横在另一只手臂和搁架之间，于是它松开把手去够，门弹回去关上，一切重来。整理桌面时手里拿着书，胳膊肘把显示器推歪，把别的东西扫到了地上。在真机上，抓起放下很可靠，需要精确接触的插头插入几乎全部失败。猫知道自己能不能钻过那条缝，它不知道。</p>
+<p><strong>它不会用动作去检验假设</strong>。遇到一个陌生的水龙头，推了不出水，它就继续推、微调角度，而不是想到“也许是要转的”然后试一下；水槽满了，水漫到地上。它也常常分不清看起来完成了和真的完成了：把画面里杯柄和挂钩的重叠当成已经挂上，把手指合拢当成已经抓住。</p>
+<p><strong>它不维护整个世界</strong>。它只在意手里的东西。世界的其余部分，包括它自己改变过的部分，只有在挡住下一步时才会进入它的考虑。冰箱门开着，它去搬水果了；按最终状态打分，这一局算过，因为结束时门关上了。</p>
+<p><strong>它没有时间</strong>。它像在一个会暂停的世界里推理，在真机上，一次任务的大部分时间都花在思考上。“蛋快熟了”在它的知识里，却不在它的节奏里。</p>
+<p>就连主动视觉也只是萌芽：它只在被挡住的时候才动相机，而不会为了减少不确定性主动去看。被挡住之前，它不会问自己：我现在确定什么，不确定什么，看哪里能把两者分开。</p>
+<figure><img alt="图 3 · 它缺的四样东西" src="images/fig3_failures.jpg" loading="lazy"><figcaption>图 3 · 它缺的四样东西</figcaption></figure>
+<h2>三、不是表征的问题，是生态的问题</h2>
+<p>这四样缺失不是随机的短板，而是同一样东西的不同侧面：一个内部状态，把自己的身体、自己造成的改变、看不见的东西和正在流逝的时间都算进去；再加上靠行动去检验它的习惯。合在一起，就是一个世界模型。按理说，它应该自然涌现。为什么没有？</p>
+<p>先看动物的世界模型是怎么来的。没有人给猫设计世界模型。猫要做的只是吃到东西、跳上桌子、钻过缝隙、躲开危险；但只要眼前看到的不足以决定下一步，它就得从过去压缩出一个内部状态：我在哪，东西在哪，什么被挡住了，刚才发生了什么，现在还有几种可能。分不清“知道”和“不知道”的猫会跳空，会被夹住。在一个部分可观测、持续变化、犯错有代价的世界里，世界模型是同时解决无数个小问题最经济的共同中间解。它不是被设计出来的，是被逼出来的。</p>
+<p>把这个道理反过来推，就是这篇文章最核心的一句话：</p>
+<blockquote>
+<p><strong>如果世界会暂停、失败免费、示范现成、判官只看最终结果，那么最经济的解，就是不维护世界模型。</strong></p>
+</blockquote>
+<figure><img alt="图 4 · 两种生态，两种最经济解" src="images/fig4_two_ecologies.jpg" loading="lazy"><figcaption>图 4 · 两种生态，两种最经济解</figcaption></figure>
+<p>图的左边，就是 GPT-6 长大的地方。仿真器在它思考时停住；失败了可以重来，不留痕迹；每个任务都有示范可以照着改；成败由几条规则在最后一刻检查，“蛋熟了”一旦为真就一直为真，烧焦了也算熟，也没有任何一条规则要求关火。在这样的考场里，它就是最经济的解。它的失败清单，就是这个考场从来没要求过的东西的清单。图的右边，是猫长大的地方。</p>
+<blockquote>
+<p><strong>旁注</strong>：视觉表征也逃不出这个道理。我们在探测一批冻结的视觉表征编码了多少空间结构时看到：空间布局读得出来，但不少表征对观察的时间顺序并不敏感。“纯视觉的表征天然就是世界模型”同样不成立。世界模型既不是视觉表征的固有属性，也不是语言表征的固有属性；它出现在训练闭环要求它出现的地方。</p>
+</blockquote>
+<p>所以，好的表征不必手工设计，要设计的是压力。手工设计表征，从边缘检测器到人工定义的状态，一直是输的那一方；手工设计压力，却恰恰是自然做过的事：重力、饥饿、捕食者、不可逆、时间。</p>
+<h2>四、压力应该长什么样</h2>
+<p>这样看，“好的表征”就不再是一个可以拿出来检查的特征向量，而是一组只能在不等人的世界里测出来的行为：记得自己改变过什么；对看不见的东西，比如视野外的布局、物体的质量和摩擦、一个机关该推还是该转，保留恰当的怀疑，并且知道做什么能消除怀疑；把“完成”当成物理问题，而不是画面问题；知道自己的身体在哪；知道时间在走。</p>
+<figure><img alt="图 5 · 只有交互才能揭示的东西" src="images/fig5_hidden.jpg" loading="lazy"><figcaption>图 5 · 只有交互才能揭示的东西</figcaption></figure>
+<p>长期存在的智能体、多样的任务、部分可观测、由自己的行动产生数据，这些是从生物发展里借来的老条件，今天的训练环境多少都具备。GPT-6 的失败清单说明，还缺这几样：</p>
+<ol>
+<li><strong>世界不等人</strong>。思考的时间算在世界的钟上，观察会过期；做成了什么，和什么时候做成，同样重要。</li>
+<li><strong>失败有代价，有些无法挽回</strong>。不能靠多给几次机会把成功率刷上去；洒出去的水收不回来。</li>
+<li><strong>没有示范</strong>。经验在行动中获得。看哪里、身体怎么摆、陌生的机关怎么用，都得自己去试，何况示范里本来就没有主动视觉。</li>
+<li><strong>判官看整个过程，而不只是最后一刻</strong>。评判依据是对智能体隐藏的物理量，是蛋的中心温度，而不是“熟了”这个标签；那些没人说出口的义务，关冰箱、关水龙头、关火，和明确的指令一起算分。</li>
+</ol>
+<p>什么样的训练环境，能让不形成世界模型的策略长期活不下去？这个问题现在有了具体的形状。</p>
+<h2>五、瞎子、猫和博士</h2>
+<p>回到题目里的三个角色。</p>
+<p><strong>瞎子</strong>没有视觉，却有一个会推回来的世界：墙在那里，桌角在那里，走错一步就撞上。他靠触觉和运动建起整间屋子的结构。他说明，压力不挑模态；信息结构对了，哪条感官通道都行。</p>
+<p><strong>猫</strong>没有语言，却有三个角色里最完整的物理智能。没有人给猫设计过世界模型，是缝隙、桌沿和会跑的猎物把它逼出来的。它从没读过书，也从不把自己塞进过不去的地方，因为塞错一次的代价它付过。</p>
+<p><strong>博士</strong>读过所有的书、看过所有的视频，却从来没被世界推回来过。GPT-6 就是这个博士。他比我预想的强得多：知道冰箱门怎么开，知道蛋会糊，甚至会把相机挪到看得见的地方。可他把自己卡在冰箱门和料理台之间，把水龙头推了又推，让蛋在锅里焦掉。不是因为他笨，而是因为他一辈子都待在一间会暂停、可以无限重来、只看最终答案的考场里；他正是那间考场的最优解。</p>
+<p>说到底，这些年这个领域把力气都花在了学生身上：更大的模型，更好的表征，更多的书和视频。GPT-6 证明了这条路能走多远，也证明了它的尽头在哪里。会暂停的考场会继续出题，博士会继续拿高分，厨房里的蛋会继续糊。每一个会暂停、允许重来、只看终态的 benchmark，奖励的都是不维护世界模型的策略；榜单上的进步和厨房里的失败，可以并排无限延续下去。</p>
+<p>剩下的杠杆不在学生身上，在考场上。<strong>下一代模型缺的不是更多的书，而是一个不等它、也不原谅它的世界。</strong></p>
+<figure><img alt="图 6 · 一个不等他的世界" src="images/fig6_closing.jpg" loading="lazy"><figcaption>图 6 · 一个不等他的世界</figcaption></figure>
+<h2>注：七条能力的出处</h2>
+<p>这七条不是现成的分类，是本文自己的归纳；但每一条都对应一块既有的研究：</p>
+<ol>
+<li><strong>对象性</strong>：Spelke &amp; Kinzler (2007) 核心知识中的客体系统；Baillargeon 的违背预期实验；IntPhys 评测（Riochet et al.）。</li>
+<li><strong>直觉物理</strong>：Battaglia, Hamrick &amp; Tenenbaum (2013)；Kubricht, Holyoak &amp; Lu (2017) 的综述；Physion 等评测。</li>
+<li><strong>身体相关的可供性</strong>：Gibson (1979)；Warren (1984) 的台阶实验；Adolph 关于婴儿运动发展的系列研究；身体图式见 Head &amp; Holmes (1911)、Iriki et al. (1996)。</li>
+<li><strong>感知—行动因果性</strong>：O’Regan &amp; Noë (2001) 的 sensorimotor contingency；Held &amp; Hein (1963)；Kirsh &amp; Maglio (1994) 的 epistemic action；Gopnik 等的因果学习；Stahl &amp; Feigenson (2015)。</li>
+<li><strong>主动感知</strong>：Bajcsy (1988)、Aloimonos et al. (1988)、Ballard (1991)，以及 Bajcsy, Aloimonos &amp; Tsotsos (2018)；Yarbus (1967)；Hayhoe &amp; Ballard (2005)。</li>
+<li><strong>对整个世界的持续状态</strong>：POMDP 的信念状态（Kaelbling, Littman &amp; Cassandra 1998）；situation awareness（Endsley 1995）；认知地图（Tolman 1948）；自运动中的空间更新（Wang &amp; Spelke 2000）。</li>
+<li><strong>时间</strong>：Lee (1976) 的 tau 与时间到接触；von Hofsten (1980) 婴儿的前瞻性抓取；anytime 算法（Dean &amp; Boddy 1988）；有限理性（Russell &amp; Wefald 1991）；Brooks (1991)。</li>
+</ol>
+<p>前五条的筛选标准，前语言出现、跨物种、与生存直接相关、能从感知—行动经验中获得，沿用 Spelke 对核心知识的界定。现有的直觉物理分类大多只覆盖前两条，把后三条与之并列是本文的取舍；六、七两条来自 AI 和生态心理学，而非发展心理学。</p>
+<h2>参考</h2>
+<p>文中关于 GPT-6 的现象来自：</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2610.22471">Has GPT-6-Astra Achieved Embodied Intelligence?</a> arXiv:2610.22471</li>
+<li><a href="https://arxiv.org/abs/2610.28259">Large Multimodal Models for Direct Robot Control: GPT-6 as a Beginning</a> arXiv:2610.28259</li>
+</ul>
+<h2>引用本文</h2>
+<pre><code class="language-bibtex">@misc{yin2026phdblindcat,
+  title        = {博士、瞎子和猫},
+  author       = {Yin, Baiqiao},
+  year         = {2026},
+  month        = {October},
+  howpublished = {Blog post},
+  url          = {https://yyyybq.github.io/blog/phd-blind-man-and-cat/}
+}
+</code></pre>
+</main></body></html>
