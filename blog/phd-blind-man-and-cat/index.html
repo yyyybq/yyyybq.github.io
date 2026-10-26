@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>博士、瞎子和猫</title>
-<meta property="og:title" content="博士、瞎子和猫">
+<title>博士、瞎子和猫——写在GPT6 Astra tech report之后</title>
+<meta property="og:title" content="博士、瞎子和猫——写在GPT6 Astra tech report之后">
 <meta property="og:image" content="https://yyyybq.github.io/blog/phd-blind-man-and-cat/images/fig1_hero.jpg">
 <style>
 :root{--ink:#1f2937;--muted:#6b7280;--paper:#fffdf9;--rule:#e5e0d6;--accent:#e07a5f;--tint:#f6f1e7;
@@ -50,7 +50,7 @@ p,li,td{overflow-wrap:anywhere}
 </head>
 <body><main>
 <nav class="home-link" aria-label="博客导航"><a href="../../#blog">← Baiqiao Yin · 博客</a></nav>
-<h1>博士、瞎子和猫</h1>
+<h1>博士、瞎子和猫——写在GPT6 Astra tech report之后</h1>
 <p class="byline"><span>2026 年 10 月 · Baiqiao Yin · 阅读约 10 分钟</span><a href="en.html">English</a></p>
 <p>GPT-6 正在操控一台双臂机器人插花。握着花的那只手臂，腕部相机看不见瓶口；于是它把空着的另一只手臂挪过去，让那只手臂的相机对准瓶口，再把花插进去。没有人教过它这一招。遥操作的示范里几乎没有这种动作：人类示范者用自己的眼睛看场景，很少会为了看清楚去挪一台相机。</p>
 <p>同一个模型，在一个不会暂停的厨房里，把牛奶放进冰箱，转身去搬水果，冰箱门在身后敞了好几分钟。锅里的蛋熟了，它开始不紧不慢地考虑要不要关火；等火真正关掉，蛋已经焦了。</p>
@@ -118,7 +118,7 @@ p,li,td{overflow-wrap:anywhere}
 <p><strong>一句话诊断</strong>：它有的，都能从书和视频里二手学到：东西被挡住了还在，蛋会糊，水洒了收不回来。它缺的四样，都只能第一手获得。</p>
 </blockquote>
 <p><strong>它不为自己的身体做计划</strong>。去冰箱取东西，它一只手拉着门，基座停的位置恰好让门横在另一只手臂和搁架之间，于是它松开把手去够，门弹回去关上，一切重来。整理桌面时手里拿着书，胳膊肘把显示器推歪，把别的东西扫到了地上。在真机上，抓起放下很可靠，需要精确接触的插头插入几乎全部失败。猫知道自己能不能钻过那条缝，它不知道。</p>
-<p><strong>它不会用动作去检验假设</strong>。遇到一个陌生的水龙头，推了不出水，它就继续推、微调角度，而不是想到“也许是要转的”然后试一下；水槽满了，水漫到地上。它也常常分不清看起来完成了和真的完成了：把画面里杯柄和挂钩的重叠当成已经挂上，把手指合拢当成已经抓住。</p>
+<p><strong>它不会用动作去检验假设</strong>。遇到一个陌生的水龙头，水已经在流，它推了没能关掉，就继续推、微调角度，而不是想到“也许是要转的”然后试一下；水槽满了，水漫到地上。它也常常分不清看起来完成了和真的完成了：把画面里杯柄和挂钩的重叠当成已经挂上，把手指合拢当成已经抓住。</p>
 <p><strong>它不维护整个世界</strong>。它只在意手里的东西。世界的其余部分，包括它自己改变过的部分，只有在挡住下一步时才会进入它的考虑。冰箱门开着，它去搬水果了；按最终状态打分，这一局算过，因为结束时门关上了。</p>
 <p><strong>它没有时间</strong>。它像在一个会暂停的世界里推理，在真机上，一次任务的大部分时间都花在思考上。“蛋快熟了”在它的知识里，却不在它的节奏里。</p>
 <p>就连主动视觉也只是萌芽：它只在被挡住的时候才动相机，而不会为了减少不确定性主动去看。被挡住之前，它不会问自己：我现在确定什么，不确定什么，看哪里能把两者分开。</p>
@@ -133,7 +133,7 @@ p,li,td{overflow-wrap:anywhere}
 <figure><img alt="图 4 · 两种生态，两种最经济解" src="images/fig4_two_ecologies.jpg" loading="lazy"><figcaption>图 4 · 两种生态，两种最经济解</figcaption></figure>
 <p>图的左边，就是 GPT-6 长大的地方。仿真器在它思考时停住；失败了可以重来，不留痕迹；每个任务都有示范可以照着改；成败由几条规则在最后一刻检查，“蛋熟了”一旦为真就一直为真，烧焦了也算熟，也没有任何一条规则要求关火。在这样的考场里，它就是最经济的解。它的失败清单，就是这个考场从来没要求过的东西的清单。图的右边，是猫长大的地方。</p>
 <blockquote>
-<p><strong>旁注</strong>：视觉表征也逃不出这个道理。我们在探测一批冻结的视觉表征编码了多少空间结构时看到：空间布局读得出来，但不少表征对观察的时间顺序并不敏感。“纯视觉的表征天然就是世界模型”同样不成立。世界模型既不是视觉表征的固有属性，也不是语言表征的固有属性；它出现在训练闭环要求它出现的地方。</p>
+<p><strong>旁注</strong>：视觉表征也逃不出这个道理。我们在<a href="https://yyyybq.github.io/probing-spatial-state/">探测一批冻结的视觉表征编码了多少空间结构</a>时看到：空间布局读得出来，但不少表征对观察的时间顺序并不敏感。“纯视觉的表征天然就是世界模型”同样不成立。世界模型既不是视觉表征的固有属性，也不是语言表征的固有属性；它出现在训练闭环要求它出现的地方。</p>
 </blockquote>
 <p>所以，好的表征不必手工设计，要设计的是压力。手工设计表征，从边缘检测器到人工定义的状态，一直是输的那一方；手工设计压力，却恰恰是自然做过的事：重力、饥饿、捕食者、不可逆、时间。</p>
 <h2>四、压力应该长什么样</h2>
@@ -175,7 +175,7 @@ p,li,td{overflow-wrap:anywhere}
 </ul>
 <h2>引用本文</h2>
 <pre><code class="language-bibtex">@misc{yin2026phdblindcat,
-  title        = {博士、瞎子和猫},
+  title        = {博士、瞎子和猫——写在GPT6 Astra tech report之后},
   author       = {Yin, Baiqiao},
   year         = {2026},
   month        = {October},
