@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="新加坡探店地图：收藏想去的吃喝玩乐、展览和小店。" />
+    <meta name="theme-color" content="#f5f2eb" />
+    <meta name="robots" content="noindex" />
+    <title>新加坡探店地图</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%8D%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="lib/leaflet/leaflet.js" defer></script>
+    <script src="config.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div id="map" role="application" aria-label="新加坡地图"></div>
+
+    <header class="topbar">
+      <div class="title-row">
+        <h1>新加坡探店地图</h1>
+        <span id="count" class="count"></span>
+        <button id="who-btn" class="who" type="button" hidden></button>
+      </div>
+      <nav id="filters" class="filters" aria-label="按类别筛选"></nav>
+    </header>
+
+    <div class="fab-stack">
+      <button id="locate-btn" class="round-btn" type="button" aria-label="定位到我的位置" title="定位到我">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /><circle cx="12" cy="12" r="7.5" fill="none" /></svg>
+      </button>
+      <button id="add-btn" class="fab" type="button"><span aria-hidden="true">＋</span> 添加</button>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- 地点详情卡片：手机为底部弹出，电脑为右侧面板 -->
+    <section id="detail" class="panel detail" aria-label="地点详情" hidden></section>
+
+    <!-- 添加 / 编辑 -->
+    <section id="editor" class="panel editor" aria-labelledby="editor-title" hidden>
+      <form id="place-form" novalidate autocomplete="off">
+        <header class="editor-head">
+          <button type="button" class="text-btn" data-close-editor>取消</button>
+          <h2 id="editor-title">添加地点</h2>
+          <span class="editor-who" id="editor-who"></span>
+        </header>
+
+        <div class="editor-body">
+          <div class="field">
+            <label for="f-postal">邮编</label>
+            <div class="row">
+              <input id="f-postal" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="6 位邮编，如 018956" enterkeyhint="search" />
+              <button type="button" class="ghost-btn" id="f-postal-go">查找</button>
+            </div>
+            <p class="hint" id="loc-status"></p>
+            <div id="search-results" class="results"></div>
+            <div class="alt-actions">
+              <button type="button" class="text-btn" id="kw-toggle">查不到？用店名 / 地址搜索</button>
+              <button type="button" class="text-btn" id="manual-pin">在地图上手动选点</button>
+            </div>
+            <div id="kw-box" class="row" hidden>
+              <input id="f-kw" type="search" placeholder="店名、楼名或路名" enterkeyhint="search" />
+              <button type="button" class="ghost-btn" id="f-kw-go">搜索</button>
+            </div>
+          </div>
+
+          <div class="field" id="loc-field" hidden>
+            <div id="mini-map" class="mini-map"></div>
+            <p class="hint">拖动标记可以微调位置</p>
+            <label for="f-address" class="sub-label">地址（自动带出，可改）</label>
+            <input id="f-address" maxlength="300" placeholder="楼名 / 地址" />
+          </div>
+
+          <div class="field">
+            <label for="f-name">店名 <em>*</em></label>
+            <input id="f-name" maxlength="120" placeholder="店名" required />
+          </div>
+
+          <div class="field">
+            <label for="f-unit">楼层 / 门牌 <span class="opt">可选</span></label>
+            <input id="f-unit" maxlength="60" placeholder="如 #B1-23 或 2 楼" />
+          </div>
+
+          <div class="field">
+            <span class="label" id="f-cats-label">类别 <em>*</em></span>
+            <div id="f-cats" class="cat-pick" role="radiogroup" aria-labelledby="f-cats-label"></div>
+          </div>
+
+          <div class="field">
+            <span class="label">图片 <span class="opt">第一张是封面，点缩略图可设为封面</span></span>
+            <div id="f-images" class="thumbs">
+              <label class="thumb add-thumb" for="f-file">
+                <span aria-hidden="true">＋</span>
+                <small>选图片</small>
+              </label>
+            </div>
+            <input id="f-file" class="visually-hidden" type="file" accept="image/*" multiple />
+          </div>
+
+          <div class="field">
+            <label for="f-link">链接 <span class="opt">可加多个</span></label>
+            <textarea id="f-link" rows="2" placeholder="整段粘贴小红书 / 视频号的分享内容，会自动提取网址"></textarea>
+            <div id="f-links" class="link-list"></div>
+          </div>
+
+          <div class="field">
+            <label for="f-note">备注</label>
+            <textarea id="f-note" rows="3" maxlength="2000" placeholder="想点什么、营业时间、和谁去……"></textarea>
+          </div>
+
+          <div class="field danger-zone" id="delete-zone" hidden>
+            <button type="button" class="danger-btn" id="delete-btn">删除这个地点</button>
+          </div>
+        </div>
+
+        <footer class="editor-foot">
+          <button type="submit" class="primary-btn" id="save-btn">保存</button>
+        </footer>
+      </form>
+    </section>
+
+    <!-- 编辑口令 -->
+    <dialog id="auth-dialog" class="dialog">
+      <form id="auth-form" method="dialog" novalidate>
+        <h2>输入编辑口令</h2>
+        <p class="hint">口令由地图主人发给你。昵称会记录在你添加或修改的地点上。</p>
+        <label for="a-pass">编辑口令</label>
+        <input id="a-pass" type="password" autocomplete="current-password" required />
+        <label for="a-nick">你的昵称</label>
+        <input id="a-nick" maxlength="24" autocomplete="nickname" required />
+        <p class="error" id="auth-error" role="alert"></p>
+        <div class="dialog-actions">
+          <button type="button" class="text-btn" id="auth-cancel">取消</button>
+          <button type="submit" class="primary-btn" id="auth-submit">确定</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- 大图查看 -->
+    <div id="lightbox" class="lightbox" hidden>
+      <div class="lightbox-track" id="lightbox-track"></div>
+      <span class="lightbox-counter" id="lightbox-counter"></span>
+      <button type="button" class="lightbox-close" id="lightbox-close" aria-label="关闭">×</button>
+    </div>
+  </body>
+</html>

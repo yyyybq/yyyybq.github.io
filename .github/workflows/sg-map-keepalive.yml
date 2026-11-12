@@ -1,0 +1,34 @@
+# 新加坡探店地图（/sg-map）保活：Supabase 免费版一周没有活动会暂停项目。
+# 这里每 3 天读一次数据库（只读、用公开 key），算作项目活动。
+# 另外，GitHub 会自动停用 60 天没有提交的仓库里的定时任务，所以每次运行时把自己重新启用一次。
+name: sg-map keep-alive
+
+on:
+  schedule:
+    - cron: "17 3 */3 * *" # 每 3 天一次，UTC 03:17（新加坡 11:17）
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read from Supabase (counts as project activity)
+        env:
+          SUPABASE_URL: https://akzakeqyiwhscuykbqfk.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_9SjzkExmEjMdz-S3maJ-EQ_ImiOk2qv
+        run: |
+          code=$(curl -sS -o body.json -w '%{http_code}' \
+            "$SUPABASE_URL/rest/v1/places?select=id&limit=1" \
+            -H "apikey: $SUPABASE_PUBLISHABLE_KEY")
+          echo "HTTP $code"
+          cat body.json; echo
+          test "$code" = "200"
+
+      - name: Keep this scheduled workflow enabled
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/sg-map-keepalive.yml/enable"
