@@ -14,6 +14,7 @@
   const DESKTOP = () => window.innerWidth >= 900;
 
   const $ = (sel, root = document) => root.querySelector(sel);
+  const AUTH_KEY = "sgmap.auth.v1"; // 必须在 state（会调用 readAuth）之前定义
 
   const state = {
     places: [],
@@ -35,6 +36,24 @@
 
   function catOf(key) {
     return C.categories.find((c) => c.key === key) || C.categories[C.categories.length - 1];
+  }
+
+  const GROUPS = C.groups || [];
+  const groupOf = (c) => (c.group && GROUPS.find((g) => g.key === c.group)) || null;
+  // 「吃·甜品」这样的完整名称；没有大类的就是自己的名字
+  const fullLabel = (c) => (groupOf(c) ? `${groupOf(c).label}·${c.label}` : c.label);
+
+  // 筛选栏第一层：大类（含若干小类）+ 没有大类的类别
+  function topEntries() {
+    const out = [];
+    for (const c of C.categories) {
+      const g = groupOf(c);
+      if (!g) out.push({ id: c.key, label: c.label, icon: c.icon, color: c.color, keys: [c.key] });
+      else if (!out.some((t) => t.id === "g:" + g.key)) {
+        out.push({ id: "g:" + g.key, label: g.label, icon: g.icon, color: g.color, group: g, keys: C.categories.filter((x) => x.group === g.key).map((x) => x.key) });
+      }
+    }
+    return out;
   }
 
   function imgUrl(path) {
@@ -115,8 +134,6 @@
   // ======================================================================
   // 编辑口令 + 后端调用
   // ======================================================================
-
-  const AUTH_KEY = "sgmap.auth.v1";
 
   function readAuth() {
     try {
@@ -414,29 +431,62 @@
       counts[k] = (counts[k] || 0) + 1;
     }
     const f = state.filter;
+    const tops = topEntries();
     $("#filters").innerHTML =
-      `<button type="button" class="chip${f ? "" : " is-on"}" data-k="" aria-pressed="${!f}">全部 <span class="n">${state.places.length}</span></button>` +
-      C.categories
-        .map((c) => {
-          const on = !!f && f.has(c.key);
-          return `<button type="button" class="chip${on ? " is-on" : ""}" style="--c:${c.color}" data-k="${esc(c.key)}" aria-pressed="${on}">${c.icon} ${esc(c.label)} <span class="n">${counts[c.key] || 0}</span></button>`;
+      `<button type="button" class="chip${f ? "" : " is-on"}" data-all aria-pressed="${!f}">全部 <span class="n">${state.places.length}</span></button>` +
+      tops
+        .map((t) => {
+          const n = t.keys.reduce((sum, k) => sum + (counts[k] || 0), 0);
+          const on = !!f && t.keys.every((k) => f.has(k));
+          const part = !!f && !on && t.keys.some((k) => f.has(k));
+          return `<button type="button" class="chip${on ? " is-on" : part ? " is-part" : ""}" style="--c:${t.color}" data-top="${esc(t.id)}" aria-pressed="${on}">${t.icon} ${esc(t.label)}${t.group ? '<span class="caret">▾</span>' : ""} <span class="n">${n}</span></button>`;
         })
         .join("");
+
+    // 第二层：选中了某个大类时，显示它的小类
+    const open = tops.filter((t) => t.group && f && t.keys.some((k) => f.has(k)));
+    const sub = $("#subfilters");
+    sub.hidden = !open.length;
+    sub.innerHTML = open
+      .map((t) =>
+        t.keys
+          .map((k) => {
+            const c = catOf(k);
+            const on = f.has(k);
+            return `<button type="button" class="chip small${on ? " is-on" : ""}" style="--c:${c.color}" data-sub="${esc(k)}" data-of="${esc(t.id)}" aria-pressed="${on}">${c.icon} ${esc(c.label)} <span class="n">${counts[k] || 0}</span></button>`;
+          })
+          .join(""),
+      )
+      .join('<span class="sub-sep" aria-hidden="true"></span>');
   }
 
-  $("#filters").addEventListener("click", (e) => {
+  function normalizeFilter() {
+    if (state.filter && (!state.filter.size || state.filter.size === C.categories.length)) state.filter = null;
+  }
+
+  function onFilterClick(e) {
     const chip = e.target.closest(".chip");
     if (!chip) return;
-    const k = chip.dataset.k;
-    if (!k) state.filter = null;
-    else if (!state.filter) state.filter = new Set([k]);
-    else {
-      state.filter.has(k) ? state.filter.delete(k) : state.filter.add(k);
-      if (!state.filter.size || state.filter.size === C.categories.length) state.filter = null;
+    const tops = topEntries();
+    if (chip.hasAttribute("data-all")) state.filter = null;
+    else if (chip.dataset.top) {
+      const keys = tops.find((t) => t.id === chip.dataset.top).keys;
+      if (!state.filter) state.filter = new Set(keys);
+      else if (keys.every((k) => state.filter.has(k))) keys.forEach((k) => state.filter.delete(k));
+      else keys.forEach((k) => state.filter.add(k));
+    } else if (chip.dataset.sub) {
+      const k = chip.dataset.sub;
+      const siblings = tops.find((t) => t.id === chip.dataset.of).keys;
+      // 大类整组选中时，点小类 = 只看这个小类；否则就是开 / 关这个小类
+      if (siblings.every((s) => state.filter.has(s))) siblings.forEach((s) => s !== k && state.filter.delete(s));
+      else state.filter.has(k) ? state.filter.delete(k) : state.filter.add(k);
     }
+    normalizeFilter();
     if (state.selectedId && !isVisible(placeById(state.selectedId))) closeDetail();
     renderAll();
-  });
+  }
+  $("#filters").addEventListener("click", onFilterClick);
+  $("#subfilters").addEventListener("click", onFilterClick);
 
   function renderCount() {
     const total = state.places.length;
@@ -487,7 +537,7 @@
           : ""
       }
       <div class="detail-body">
-        <span class="cat-badge" style="--c:${c.color}">${c.icon} ${esc(c.label)}</span>
+        <span class="cat-badge" style="--c:${c.color}">${c.icon} ${esc(fullLabel(c))}</span>
         <h2>${esc(p.name)}</h2>
         ${addr ? `<p class="addr">${esc(addr)}</p>` : ""}
         ${p.note ? `<p class="note">${esc(p.note)}</p>` : ""}
@@ -838,7 +888,7 @@
     $("#f-cats").innerHTML = C.categories
       .map(
         (c) =>
-          `<button type="button" class="cat-opt" role="radio" aria-checked="${form.category === c.key}" data-k="${esc(c.key)}" style="--c:${c.color}">${c.icon} ${esc(c.label)}${c.hint ? `<small>${esc(c.hint)}</small>` : ""}</button>`,
+          `<button type="button" class="cat-opt" role="radio" aria-checked="${form.category === c.key}" data-k="${esc(c.key)}" style="--c:${c.color}">${c.icon} ${esc(c.label)}${c.hint || groupOf(c) ? `<small>${esc(c.hint || groupOf(c).label)}</small>` : ""}</button>`,
       )
       .join("");
   }

@@ -67,7 +67,11 @@ button { cursor: pointer; }
 .chip .n { font-size: 11px; color: var(--ink-3); }
 .chip.is-on { background: var(--c, var(--ink)); border-color: var(--c, var(--ink)); color: #fff; }
 .chip.is-on .n { color: rgba(255, 255, 255, 0.8); }
-.chip.is-off { opacity: 0.55; }
+.chip.is-part { border-color: var(--c); color: var(--c); background: color-mix(in srgb, var(--c) 10%, white); }
+.chip .caret { font-size: 10px; margin-left: 1px; opacity: 0.7; }
+.filters.sub { padding-top: 0; }
+.chip.small { padding: 4px 10px; font-size: 13px; }
+.sub-sep { flex: 0 0 1px; background: var(--line); margin: 4px 2px; }
 
 /* ---------- Leaflet 调整 ---------- */
 .leaflet-top { top: var(--header-h); }

@@ -6,14 +6,24 @@ window.SGMAP_CONFIG = {
   supabaseKey: "sb_publishable_9SjzkExmEjMdz-S3maJ-EQ_ImiOk2qv",
   bucket: "sg-map",
 
-  // 类别：key 存进数据库，一旦有地点用了就别改 key（label / icon / color 随便改）。
+  // 大类（可选）：小类通过 group 挂在大类下面。筛选栏先显示大类，点开后可以再选小类。
+  groups: [
+    { key: "eat", label: "吃", icon: "🍽️", color: "#E4572E" },
+    { key: "drink", label: "喝", icon: "🥤", color: "#8D5A3B" },
+  ],
+
+  // 类别：key 存进数据库，一旦有地点用了就别改 key（label / icon / color / group 随便改）。
+  // 注意：key "eat" 现在表示「正餐」、"drink" 表示「咖啡」，是为了让拆分前的旧数据自动落到这两类。
   // 删掉某个类别后，用了它的地点会显示为最后一个类别（建议保留「其他」放最后）。
   categories: [
-    { key: "eat", label: "吃", icon: "🍜", color: "#E4572E" },
-    { key: "drink", label: "喝", hint: "咖啡 · 酒吧", icon: "☕", color: "#9C6644" },
+    { key: "eat", group: "eat", label: "正餐", icon: "🍜", color: "#E4572E" },
+    { key: "dessert", group: "eat", label: "甜品", icon: "🍰", color: "#EC7A9C" },
+    { key: "drink", group: "drink", label: "咖啡", icon: "☕", color: "#8D5A3B" },
+    { key: "bar", group: "drink", label: "酒馆", icon: "🍸", color: "#3D5A98" },
     { key: "play", label: "玩·体验", icon: "🎡", color: "#1F8A70" },
     { key: "exhibit", label: "看展", icon: "🖼️", color: "#6C4AB6" },
-    { key: "shop", label: "买", icon: "🛍️", color: "#D63384" },
+    { key: "shop", label: "买", hint: "生活杂货", icon: "🛒", color: "#D63384" },
+    { key: "browse", label: "逛", hint: "只逛不买", icon: "🏛️", color: "#C08A1E" },
     { key: "other", label: "其他", icon: "📍", color: "#5B6770" },
   ],
 
