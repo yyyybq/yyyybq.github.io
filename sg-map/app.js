@@ -307,7 +307,7 @@
   });
   addBasemap(map);
   L.control.attribution({ position: "bottomleft", prefix: '<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>' }).addTo(map);
-  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) L.control.zoom({ position: "topright" }).addTo(map);
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) L.control.zoom({ position: "topleft" }).addTo(map);
   map.on("click", () => closeDetail());
 
   function pinSize() {
@@ -547,22 +547,25 @@
     }
   });
 
-  // 让选中的标记露在卡片上方（手机）或卡片左侧（电脑）
+  // 让选中的标记露在卡片上方（手机）或卡片左侧（电脑）；太远时顺便放大到街道级别
   function panIntoView(id) {
     requestAnimationFrame(() => {
       const m = state.markers.get(id);
       if (!m) return;
       const size = map.getSize();
-      const pt = map.latLngToContainerPoint(m.getLatLng()).add([m.sg.dx, m.sg.dy]);
       const rect = detailEl.getBoundingClientRect();
       const headerH = $(".topbar").getBoundingClientRect().bottom;
-      let box;
-      if (DESKTOP()) box = { x0: 40, x1: rect.left - 40, y0: headerH + 20, y1: size.y - 40 };
-      else box = { x0: 30, x1: size.x - 30, y0: headerH + 20, y1: rect.top - 30 };
-      if (pt.x >= box.x0 && pt.x <= box.x1 && pt.y >= box.y0 && pt.y <= box.y1) return;
-      const cx = (box.x0 + box.x1) / 2;
-      const cy = (box.y0 + box.y1) / 2;
-      map.panBy([pt.x - cx, pt.y - cy], { animate: true, duration: 0.35 });
+      const box = DESKTOP()
+        ? { x0: 40, x1: rect.left - 40, y0: headerH + 20, y1: size.y - 40 }
+        : { x0: 30, x1: size.x - 30, y0: headerH + 24, y1: rect.top - 24 };
+      const z = Math.max(map.getZoom(), 15);
+      if (z === map.getZoom()) {
+        const cp = map.latLngToContainerPoint(m.getLatLng()).add([m.sg.dx, m.sg.dy]);
+        if (cp.x >= box.x0 && cp.x <= box.x1 && cp.y >= box.y0 && cp.y <= box.y1) return;
+      }
+      const target = map.project(m.getLatLng(), z).add([m.sg.dx, m.sg.dy]);
+      const offset = L.point((box.x0 + box.x1) / 2 - size.x / 2, (box.y0 + box.y1) / 2 - size.y / 2);
+      map.setView(map.unproject(target.subtract(offset), z), z, { animate: true });
     });
   }
 

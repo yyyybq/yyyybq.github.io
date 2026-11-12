@@ -113,6 +113,11 @@ button { cursor: pointer; }
 }
 .round-btn svg { width: 22px; height: 22px; fill: #2f80ed; stroke: #2f80ed; stroke-width: 2; stroke-linecap: round; }
 
+@media (max-width: 899px) {
+  /* 手机上详情卡片打开时，先收起右下角按钮（点地图关掉卡片即恢复） */
+  body.panel-open .fab-stack { display: none; }
+}
+
 /* ---------- 提示 ---------- */
 .toast {
   position: fixed; left: 50%; bottom: calc(96px + var(--safe-b)); z-index: 3000;
@@ -131,7 +136,7 @@ button { cursor: pointer; }
 
 /* 详情：手机底部弹出 */
 .detail {
-  left: 0; right: 0; bottom: 0; max-height: 72vh; max-height: 72dvh;
+  left: 0; right: 0; bottom: 0; max-height: 62vh; max-height: 62dvh;
   border-radius: 18px 18px 0 0; overflow-y: auto; overscroll-behavior: contain;
   padding-bottom: calc(12px + var(--safe-b));
   animation: sheet-up 0.2s ease-out;
@@ -152,7 +157,7 @@ button { cursor: pointer; }
 .carousel-track::-webkit-scrollbar { display: none; }
 .carousel-track button {
   flex: 0 0 100%; scroll-snap-align: center; border: 0; padding: 0; background: var(--surface-2);
-  height: 240px; display: block;
+  height: 210px; display: block;
 }
 .carousel-track img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .carousel-counter {
@@ -317,7 +322,7 @@ textarea { resize: vertical; min-height: 44px; }
     top: 12px; bottom: 12px; right: 12px; left: auto; width: 420px; max-height: none;
     border-radius: 18px;
   }
-  .detail { overflow-y: auto; }
+  .detail { overflow-y: auto; bottom: auto; max-height: calc(100vh - 24px); }
   .editor { inset: 12px 12px 12px auto; width: 460px; overflow: hidden; }
   .editor-head { border-radius: 18px 18px 0 0; }
   .detail-handle { display: none; }

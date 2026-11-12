@@ -161,26 +161,39 @@ async function removeImages(paths: string[]) {
 }
 
 // ---------- OneMap ----------
+// 官方文档：Search API 需要 token；token 用 OneMap 账号邮箱+密码换取，有效期 3 天。
+// 账号没配好或登录失败时，暂时退回不带 token 的搜索（OneMap 目前仍会返回结果并附带警告），
+// 同时把失败记下来 10 分钟内不再重试，避免频繁调用 getToken 被限流。
 
-type Token = { token: string; exp: number };
+type Token = { token: string; exp: number; creds: string };
+type TokenResult = { token: string | null; error?: string };
 let memToken: Token | null = null;
 
-function tokenFresh(t: Token | null): t is Token {
-  return !!t && t.exp * 1000 - Date.now() > 6 * 3600_000; // 剩余 6 小时以上才复用
+async function hex(text: string): Promise<string> {
+  return [...(await sha256(text))].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-async function onemapToken(force = false): Promise<string | null> {
-  const email = Deno.env.get("ONEMAP_EMAIL");
-  const password = Deno.env.get("ONEMAP_PASSWORD");
-  if (!email || !password) return null;
+function tokenFresh(t: Token | null | undefined, creds: string): t is Token {
+  return !!t && t.creds === creds && t.exp * 1000 - Date.now() > 6 * 3600_000; // 剩余 6 小时以上才复用
+}
 
-  if (!force && tokenFresh(memToken)) return memToken.token;
-  if (!force) {
-    const { data } = await db.from("sgmap_kv").select("value").eq("key", "onemap_token").maybeSingle();
-    if (tokenFresh(data?.value as Token)) {
-      memToken = data!.value as Token;
-      return memToken.token;
-    }
+async function onemapToken(force = false): Promise<TokenResult> {
+  // 去掉首尾空白/换行（后台 Value 框是多行的，容易误带换行；OneMap 密码本身不允许空白）
+  const email = Deno.env.get("ONEMAP_EMAIL")?.trim();
+  const password = Deno.env.get("ONEMAP_PASSWORD")?.trim();
+  if (!email || !password) return { token: null, error: "没有设置 ONEMAP_EMAIL / ONEMAP_PASSWORD" };
+  const creds = await hex(`${email}\n${password}`); // 账号或密码一改，缓存自动失效
+
+  if (!force && tokenFresh(memToken, creds)) return { token: memToken.token };
+  const { data: rows } = await db.from("sgmap_kv").select("key, value").in("key", ["onemap_token", "onemap_login_error"]);
+  const kv = Object.fromEntries((rows ?? []).map((r) => [r.key, r.value]));
+  if (!force && tokenFresh(kv.onemap_token, creds)) {
+    memToken = kv.onemap_token;
+    return { token: memToken!.token };
+  }
+  const lastErr = kv.onemap_login_error;
+  if (lastErr && lastErr.creds === creds && Date.now() - lastErr.at < 10 * 60_000) {
+    return { token: null, error: lastErr.message };
   }
 
   const r = await fetch(`${ONEMAP}/api/auth/post/getToken`, {
@@ -189,12 +202,17 @@ async function onemapToken(force = false): Promise<string | null> {
     body: JSON.stringify({ email, password }),
   });
   const j = await r.json().catch(() => ({}));
+  const now = new Date().toISOString();
   if (!j.access_token) {
-    throw new HttpError(502, `OneMap 登录失败（${j.error ?? r.status}），请检查 ONEMAP_EMAIL / ONEMAP_PASSWORD`);
+    const message = `OneMap 登录失败：${j.error ?? r.status}`;
+    console.error(message);
+    await db.from("sgmap_kv").upsert({ key: "onemap_login_error", value: { message, at: Date.now(), creds }, updated_at: now });
+    return { token: null, error: message };
   }
-  memToken = { token: j.access_token, exp: Number(j.expiry_timestamp) };
-  await db.from("sgmap_kv").upsert({ key: "onemap_token", value: memToken, updated_at: new Date().toISOString() });
-  return memToken.token;
+  memToken = { token: j.access_token, exp: Number(j.expiry_timestamp), creds };
+  await db.from("sgmap_kv").upsert({ key: "onemap_token", value: memToken, updated_at: now });
+  await db.from("sgmap_kv").delete().eq("key", "onemap_login_error");
+  return { token: memToken.token };
 }
 
 async function onemapSearch(q: string, page: number) {
@@ -205,22 +223,24 @@ async function onemapSearch(q: string, page: number) {
     return { status: r.status, body: await r.json().catch(() => ({})) };
   };
 
-  let token = await onemapToken();
-  let res = await call(token);
+  let auth = await onemapToken();
+  let res = await call(auth.token);
   const tokenProblem = (b: any) => typeof b?.error === "string" && /token/i.test(b.error);
-  if (token && (res.status === 401 || res.status === 403 || tokenProblem(res.body))) {
-    token = await onemapToken(true);
-    res = await call(token);
+  if (auth.token && (res.status === 401 || res.status === 403 || tokenProblem(res.body))) {
+    auth = await onemapToken(true);
+    res = await call(auth.token);
   }
   if (res.status !== 200 || !Array.isArray(res.body?.results)) {
-    throw new HttpError(502, `OneMap 搜索失败：${res.body?.error ?? res.status}`);
+    const why = res.body?.error ?? res.status;
+    throw new HttpError(502, `OneMap 搜索失败：${why}${auth.error ? `（${auth.error}）` : ""}`);
   }
   const b = res.body;
   return {
     found: b.found ?? 0,
     page: b.pageNum ?? page,
     totalPages: b.totalNumPages ?? 1,
-    tokenless: !token,
+    tokenless: !auth.token,
+    tokenError: auth.error ?? null,
     results: b.results.map((r: any) => ({
       title: r.SEARCHVAL,
       building: r.BUILDING && r.BUILDING !== "NIL" ? r.BUILDING : "",
@@ -272,7 +292,7 @@ async function handle(req: Request): Promise<Response> {
       const path = `places/${new Date().getFullYear()}/${crypto.randomUUID()}.${ext}`;
       const { error } = await db.storage.from(BUCKET).upload(path, file, {
         contentType: file.type,
-        cacheControl: "31536000",
+        cacheControl: "86400", // 1 天：免费版 CDN 删除后不会立即清缓存，缓存期短一点，删掉的图片最多一天后彻底失效
         upsert: false,
       });
       if (error) throw new HttpError(500, `图片保存失败：${error.message}`);
