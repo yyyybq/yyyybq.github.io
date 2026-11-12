@@ -19,7 +19,7 @@ window.SGMAP_CONFIG = {
 
   // 链接来源：按域名识别。domains 里可以写域名（含子域名），也可以写「域名/路径前缀」。
   linkSources: [
-    { label: "小红书", color: "#FF2442", domains: ["xiaohongshu.com", "xhslink.com", "xhs.cn"] },
+    { label: "小红书", color: "#FF2442", domains: ["xiaohongshu.com", "xhslink.com", "xhslink.cn", "xhs.cn"] },
     { label: "视频号", color: "#07C160", domains: ["channels.weixin.qq.com", "weixin.qq.com/sph", "finder.video.qq.com"] },
   ],
   otherLinkSource: { label: "其他", color: "#6B7280" },
